@@ -261,9 +261,13 @@ void loop() {
     }
   }
 
-  estadoRele = novoEstado; // Atualiza a variável global 'estadoRele' com o estado calculado para todos os relés.
-  atualizaShiftRegister(); // Chama a função para enviar o novo estado de 'estadoRele' para o registrador de deslocamento, atualizando os relés fisicamente.
-
+  // Atualiza relés somente se mudou
+  if (novoEstado != estadoRele) {
+    estadoRele = novoEstado;
+    atualizaShiftRegister();
+    // Envia STATUS via USB e Bluetooth
+    cmdStatus("", Serial);
+  }
   delay(1000); // Pausa o programa por 1000 milissegundos (1 segundo) antes de repetir o loop. Isso controla a frequência de verificação do RTC e processamento de comandos.
 }
 
