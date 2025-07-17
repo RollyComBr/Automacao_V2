@@ -218,6 +218,9 @@ void loop() {
       bitWrite(novoEstado, i, statusRele[i]);
     }
   }
+  if(estadoRele != novoEstado){
+    cmdStatus("", Serial);
+  }
   estadoRele = novoEstado;
   atualizaShiftRegister();
 
@@ -381,12 +384,7 @@ void cmdOn(String cmd, Stream &porta){
     statusRele[rele] = true;
     //bitWrite(estadoRele, rele, true);
     atualizaShiftRegister();
-    porta.print("Relé ");
-    porta.print(rele);
-    porta.println(" ativado manualmente.");
     salvaModosNaEEPROM();
-  } else {
-    porta.println("Relé inválido.");
   }
 }
 void cmdOff(String cmd, Stream &porta){
@@ -396,12 +394,7 @@ void cmdOff(String cmd, Stream &porta){
     statusRele[rele] = false;
     //bitWrite(estadoRele, rele, false);
     atualizaShiftRegister();
-    porta.print("Relé ");
-    porta.print(rele);
-    porta.println(" desativado manualmente.");
     salvaModosNaEEPROM();
-  } else {
-    porta.println("Relé inválido.");
   }
 }
 void cmdAuto(String cmd, Stream &porta){
@@ -416,9 +409,6 @@ void cmdAuto(String cmd, Stream &porta){
     return;
   }
   modoAutomatico[releNum] = (modo) ? true : false;
-  porta.print("Rele ");
-  porta.print(releNum);
-  porta.print(" voltou para modo ");
   porta.println((modo) ? "AUTOMATICO." : "MANUAL.");
 }
 void cmdTime(String cmd, Stream &porta){
